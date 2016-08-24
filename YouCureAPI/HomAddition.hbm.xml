@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="HomAddition" table="&quot;Therapeutic&quot;.hom_addition" lazy="false" >
+    <id name="RaId" column="ra_id" />
+    <property name="RaDegree">
+      <column name="ra_degree" sql-type="smallint" not-null="false" />
+    </property>
+    <property name="RaRubricid">
+      <column name="ra_rubricid" sql-type="integer" not-null="false" />
+    </property>
+    <property name="RaType">
+      <column name="ra_type" sql-type="smallint" not-null="false" />
+    </property>
+    <property name="RaObjectid">
+      <column name="ra_objectid" sql-type="integer" not-null="false" />
+    </property>
+    <property name="RaConfidence">
+      <column name="ra_confidence" sql-type="real" not-null="false" />
+    </property>
+    <many-to-one name="Remedy" class="HomRemedy" column="ra_objectid" lazy="false" not-found="ignore"/>
+  </class>
+</hibernate-mapping>

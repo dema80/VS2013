@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Localisation" table="&quot;Therapeutic&quot;.localisation" lazy="false" >
+    <id name="LId" column="l_id" />
+    <property name="LText">
+      <column name="l_text" sql-type="character varying" not-null="false" />
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Translation" table="&quot;Therapeutic&quot;.translation" lazy="false" >
+    <composite-id>
+      <key-property name="Original" column="original" />
+      <key-property name="LanguageId" column="language_id" />
+    </composite-id>
+    <property name="Translationval">
+      <column name="translation" sql-type="character varying" not-null="false" />
+    </property>
+  </class>
+</hibernate-mapping>

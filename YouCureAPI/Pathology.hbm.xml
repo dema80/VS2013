@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Pathology" table="&quot;Therapeutic&quot;.pathology" lazy="false" >
+    <id name="PId" column="p_id" />
+    <property name="PCommonName">
+      <column name="p_common_name" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="PKeySymptoms">
+      <column name="p_key_symptoms" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="PIcd10Code">
+      <column name="p_icd10_code" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="QIdFirstQuestion">
+      <column name="q_id_first_question" sql-type="integer" not-null="true" />
+    </property>
+    <property name="PWarning">
+      <column name="p_warning" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="PScientificName">
+      <column name="p_scientific_name" sql-type="character varying" not-null="false" />
+    </property>
+    <bag name="Localisations" table="&quot;Therapeutic&quot;.pathology_localisation" inverse="false">
+      <key column="p_id"/>
+      <many-to-many class="Localisation" column="l_id"/>
+    </bag>
+  </class>
+</hibernate-mapping>

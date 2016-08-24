@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="PathologyLocalisation" table="pathology_localisation" lazy="true" >
+    <composite-id>
+      <key-property name="PId" column="p_id" />
+      <key-property name="LId" column="l_id" />
+    </composite-id>
+  </class>
+</hibernate-mapping>

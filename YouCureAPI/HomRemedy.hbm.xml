@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="HomRemedy" table="&quot;Therapeutic&quot;.hom_remedy" lazy="false" >
+    <id name="RId" column="r_id" />
+    <property name="RPictureid">
+      <column name="r_pictureid" sql-type="integer" not-null="false" />
+    </property>
+    <property name="RFrequence">
+      <column name="r_frequence" sql-type="integer" not-null="false" />
+    </property>
+    <property name="RFrequenceorder">
+      <column name="r_frequenceorder" sql-type="integer" not-null="false" />
+    </property>
+    <property name="RAbbrev2">
+      <column name="r_abbrev2" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RComment">
+      <column name="r_comment" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RInternalnote">
+      <column name="r_internalnote" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RResearchinfo">
+      <column name="r_researchinfo" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RNotactivereason">
+      <column name="r_notactivereason" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RDateintroduction">
+      <column name="r_dateintroduction" sql-type="date" not-null="false" />
+    </property>
+    <property name="RScientificname">
+      <column name="r_scientificname" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RNosode">
+      <column name="r_nosode" sql-type="boolean" not-null="false" />
+    </property>
+    <property name="RAbbrev">
+      <column name="r_abbrev" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RContenttypevalueid">
+      <column name="r_contenttypevalueid" sql-type="integer" not-null="false" />
+    </property>
+    <property name="RActive">
+      <column name="r_active" sql-type="boolean" not-null="false" />
+    </property>
+    <property name="RHmaname">
+      <column name="r_hmaname" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RExternalid">
+      <column name="r_externalid" sql-type="integer" not-null="false" />
+    </property>
+    <property name="ROrigin">
+      <column name="r_origin" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RName">
+      <column name="r_name" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="RTypesize">
+      <column name="r_typesize" sql-type="smallint" not-null="false" />
+    </property>
+    <property name="RAbbrev3">
+      <column name="r_abbrev3" sql-type="character varying" not-null="false" />
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Question" table="&quot;Therapeutic&quot;.question" lazy="false" >
+    <id name="QId" column="q_id" />
+    <property name="QText">
+      <column name="q_text" sql-type="character varying" not-null="false" />
+    </property>
+    <bag name="Answers" inverse="false">
+      <key column="question_id" />
+      <one-to-many class="Answer" />
+    </bag>
+    <!--<bag name="Pathology" inverse="false">
+      <key column="q_id_first_question" />
+      <one-to-many class="Pathology" />
+    </bag>-->
+  </class>
+</hibernate-mapping>

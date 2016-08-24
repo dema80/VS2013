@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="SessionDuration" table="&quot;Therapeutic&quot;.session_duration" lazy="false" >
+    <id name="Token" column="token" />
+    <property name="Deadline">
+      <column name="deadline" sql-type="timestamp without time zone" not-null="false" />
+    </property>
+  </class>
+</hibernate-mapping>

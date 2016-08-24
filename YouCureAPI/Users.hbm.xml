@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="Users" table="&quot;Therapeutic&quot;.users" lazy="false" >
+    <id name="Login" column="login" />
+    <property name="Pwd">
+      <column name="pwd" sql-type="character varying" not-null="false" />
+    </property>
+  </class>
+</hibernate-mapping>
