@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using YouCureAPI.Models;
 
@@ -40,16 +41,7 @@ namespace YouCureAPI.Controllers
                         {
                             ICriteria criteria = session.CreateCriteria<Pathology>();
                             IList<Pathology> pats = criteria.List<Pathology>();
-                            for (int i = 0; i < pats.Count; i++)
-                            {
-                                pats[i] = TranslateManager.Translate<Pathology>(session, lang, pats[i]);
-                                for (int j = 0; j < pats[i].Localisations.Count; j++)
-                                {
-                                    pats[i].Localisations[j] = TranslateManager.Translate<Localisation>(session, lang, pats[i].Localisations[j]);
-                                }
-                            }
-                            result.values = pats.ToArray<Pathology>();
-                            //session.Transaction.Commit();
+                            result.values = getPathologies(session, pats, lang);
                             session.Transaction.Rollback();
                         }
                     }
@@ -62,6 +54,90 @@ namespace YouCureAPI.Controllers
                 result.error = new SerializedError(ex);
             }
             return result;
+        }
+        //GET /api/pathologies/Localized?token=<string>&lang=<int>&local=<int>
+        [HttpGet]
+        public PResponse Localized(string token, int lang, int local)
+        {
+            PResponse result = new PResponse();
+            try
+            {
+                using (ISession session = ApplicationCore.Instance.SessionFactory.OpenSession())
+                {
+                    if (LoginManager.Check(session, token))
+                    {
+
+                        using (session.BeginTransaction())
+                        {
+                            IList<Pathology> pats = session.QueryOver<Pathology>().Right.JoinQueryOver<Localisation>(p => p.Localisations).Where(l => l.LId == local).List();
+                            result.values = getPathologies(session, pats, lang);
+                            session.Transaction.Rollback();
+                        }
+                    }
+                    else
+                        LoginManager.NoValidToken(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.error = new SerializedError(ex);
+            }
+            return result;
+        }
+        //GET /api/pathologies/Filtered?token=<string>&lang=<int>&filter=<string>
+        [HttpGet]
+        public PResponse Filtered(string token, int lang, string filter)
+        {
+            PResponse result = new PResponse();
+            try
+            {
+                using (ISession session = ApplicationCore.Instance.SessionFactory.OpenSession())
+                {
+                    if (LoginManager.Check(session, token))
+                    {
+
+                        using (session.BeginTransaction())
+                        {
+                            string[] filters = filter.Split(' ');
+                            var query = session.QueryOver<Translation>();
+                            foreach (string filt in filters)
+                            {
+                                if (lang == 1) {
+                                    query = query.AndRestrictionOn(t => t.Original).IsInsensitiveLike(filt, MatchMode.Anywhere);
+                                }
+                                else
+                                {
+                                    query = query.AndRestrictionOn(t => t.Translationval).IsInsensitiveLike(filt, MatchMode.Anywhere);
+                                }
+                            }
+                            var resu = query.List();
+                            string[] trans = query.Select(t => t.Original).List<string>().ToArray();
+                            IList<Pathology> pats = session.QueryOver<Pathology>().AndRestrictionOn(p => p.PScientificName).IsIn(trans).List();
+                            result.values = getPathologies(session, pats, lang);
+                            session.Transaction.Rollback();
+                        }
+                    }
+                    else
+                        LoginManager.NoValidToken(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.error = new SerializedError(ex);
+            }
+            return result;
+        }
+        private Pathology[] getPathologies(ISession session, IList<Pathology> pats, int lang)
+        {
+            for (int i = 0; i < pats.Count; i++)
+            {
+                pats[i] = TranslateManager.Translate<Pathology>(session, lang, pats[i]);
+                for (int j = 0; j < pats[i].Localisations.Count; j++)
+                {
+                    pats[i].Localisations[j] = TranslateManager.Translate<Localisation>(session, lang, pats[i].Localisations[j]);
+                }
+            }
+            return pats.ToArray<Pathology>();
         }
 
         //GET /api/pathologies?token=<string>&lang=<int>
