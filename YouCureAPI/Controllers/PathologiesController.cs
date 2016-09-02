@@ -1,11 +1,13 @@
 ﻿using NHibernate;
 using NHibernate.Criterion;
+using NHibernate.Transform;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Http;
 using YouCureAPI.Models;
@@ -16,6 +18,21 @@ namespace YouCureAPI.Controllers
     {
         //public TranslatedPathology[] values { get; set; }
         public Pathology[] values { get; set; }
+        public SerializedError error { get; set; }
+    }
+    public class LocalizedPatology
+    {
+        public int PId { get; set; }
+        public string PCommonName { get; set; }
+        public string PKeySymptoms { get; set; }
+        public string PIcd10Code { get; set; }
+        public int QIdFirstQuestion { get; set; }
+        public string PWarning { get; set; }
+        public string PScientificName { get; set; }
+    }
+    public class RLResponce
+    {
+        public LocalizedPatology[] values { get; set; }
         public SerializedError error { get; set; }
     }
     public class PTResponse
@@ -57,9 +74,9 @@ namespace YouCureAPI.Controllers
         }
         //GET /api/pathologies/Localized?token=<string>&lang=<int>&local=<int>
         [HttpGet]
-        public PResponse Localized(string token, int lang, int local)
+        public RLResponce Localized(string token, int lang, int local)
         {
-            PResponse result = new PResponse();
+            RLResponce result = new RLResponce();
             try
             {
                 using (ISession session = ApplicationCore.Instance.SessionFactory.OpenSession())
@@ -69,8 +86,21 @@ namespace YouCureAPI.Controllers
 
                         using (session.BeginTransaction())
                         {
-                            IList<Pathology> pats = session.QueryOver<Pathology>().Right.JoinQueryOver<Localisation>(p => p.Localisations).Where(l => l.LId == local).List();
-                            result.values = getPathologies(session, pats, lang);
+                            LocalizedPatology model = null;
+                            IList<LocalizedPatology> pats = session.QueryOver<Pathology>().Right.JoinQueryOver<Localisation>(p => p.Localisations).Where(l => l.LId == local).SelectList(list => list
+                                    .Select(p => p.PCommonName).WithAlias(() => model.PCommonName)
+                                    .Select(p => p.PId).WithAlias(() => model.PId)
+                                    .Select(p => p.PKeySymptoms).WithAlias(() => model.PKeySymptoms)
+                                    .Select(p => p.PIcd10Code).WithAlias(() => model.PIcd10Code)
+                                    .Select(p => p.QIdFirstQuestion).WithAlias(() => model.QIdFirstQuestion)
+                                    .Select(p => p.PWarning).WithAlias(() => model.PWarning)
+                                    .Select(p => p.PScientificName).WithAlias(() => model.PScientificName)
+                                ).TransformUsing(Transformers.AliasToBean<LocalizedPatology>()).Future<LocalizedPatology>().ToList();
+                            for (int i = 0; i < pats.Count; i++)
+                            {
+                                pats[i] = TranslateManager.Translate<LocalizedPatology>(session, lang, pats[i]);
+                            }
+                            result.values = pats.ToArray<LocalizedPatology>();
                             session.Transaction.Rollback();
                         }
                     }
@@ -102,7 +132,8 @@ namespace YouCureAPI.Controllers
                             var query = session.QueryOver<Translation>();
                             foreach (string filt in filters)
                             {
-                                if (lang == 1) {
+                                if (lang == 1)
+                                {
                                     query = query.AndRestrictionOn(t => t.Original).IsInsensitiveLike(filt, MatchMode.Anywhere);
                                 }
                                 else

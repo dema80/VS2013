@@ -141,7 +141,10 @@ namespace YouCureAPI.Controllers
                             Answer[] answers = session.QueryOver<Answer>().AndRestrictionOn(a => a.AId).IsIn(a_id).List().ToArray();
                             if (answers != null && answers.Length > 0)
                             {
-                                var max = session.QueryOver<Session>().Select(Projections.ProjectionList().Add(Projections.Max<Session>(x => x.SId))).List<int>().First()+1;
+                                int max = session.QueryOver<Session>().Select(Projections.ProjectionList().Add(Projections.Max<Session>(x => x.SId))).List<int>().First() + 1;
+                                int newprogr = session.QueryOver<Session>().Where(s => s.SId == max-1).Select(s => s.SProgr).List<int>().FirstOrDefault() + 1;
+                                //int max = LastSession.SId + 1;
+                                //int newprogr = LastSession.SProgr + 1;
                                 foreach (Answer answer in answers)
                                 {
                                     //Salvo la risposta nella sessione
@@ -149,10 +152,11 @@ namespace YouCureAPI.Controllers
                                     {
                                         SToken = token,
                                         SAnswerId = answer.AId,
-                                        SId = max++
+                                        SId = max++,
+                                        SProgr = newprogr
                                     };
                                     session.Save(newSessionItem);
-                                }                                
+                                }
                             }
                             else
                             {
@@ -180,6 +184,36 @@ namespace YouCureAPI.Controllers
             }
             return result;
         }
-
+        [HttpGet]
+        public QResponse Back(string token)
+        {
+            QResponse result = new QResponse();
+            try
+            {
+                using (ISession session = ApplicationCore.Instance.SessionFactory.OpenSession())
+                {
+                    if (LoginManager.Check(session, token))
+                    {
+                        using (session.BeginTransaction())
+                        {
+                            int last = session.QueryOver<Session>().Select(Projections.ProjectionList().Add(Projections.Max<Session>(x => x.SProgr))).List<int>().First();
+                            Session[] toDeletes = session.QueryOver<Session>().Where(s=>s.SProgr==last).List<Session>().ToArray();
+                            foreach (Session toDelete in toDeletes)
+                            {
+                                session.Delete(toDelete);
+                            }
+                            session.Transaction.Commit();
+                        }
+                    }
+                    else
+                        LoginManager.NoValidToken(token);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.error = new SerializedError(ex);
+            }
+            return result;
+        }
     }
 }

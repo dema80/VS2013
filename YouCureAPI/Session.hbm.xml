@@ -8,5 +8,8 @@
     <property name="SToken">
       <column name="s_token" sql-type="character varying" not-null="false" />
     </property>
+    <property name="SProgr">
+      <column name="s_progr" sql-type="integer" not-null="false" />
+    </property>
   </class>
 </hibernate-mapping>

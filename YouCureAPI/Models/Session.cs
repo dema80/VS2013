@@ -11,5 +11,6 @@ namespace YouCureAPI.Models {
         public int SId { get; set; }
         public int SAnswerId { get; set; }
         public string SToken { get; set; }
+        public int SProgr { get; set; }
     }
 }
