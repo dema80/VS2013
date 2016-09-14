@@ -177,15 +177,19 @@
     <Compile Include="Controllers\AnalysisController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PathologiesController.cs" />
+    <Compile Include="Controllers\ComplaintRemedyInfoController.cs" />
+    <Compile Include="Controllers\RemedyInfoGeneralController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="LoginManager.cs" />
     <Compile Include="Models\Answer.cs" />
+    <Compile Include="Models\ComplaintRemedyInfo.cs" />
     <Compile Include="Models\HomAddition.cs" />
     <Compile Include="Models\HomRemedy.cs" />
     <Compile Include="Models\Localisation.cs" />
+    <Compile Include="Models\RemedyGenericInfo.cs" />
     <Compile Include="Models\Session.cs" />
     <Compile Include="Models\SessionDuration.cs" />
     <Compile Include="Models\TranslatedPathology.cs" />
@@ -202,6 +206,7 @@
     <EmbeddedResource Include="Answer.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ComplaintRemedyInfo.hbm.xml" />
     <Content Include="Global.asax" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <EmbeddedResource Include="Pathology.hbm.xml">
@@ -229,6 +234,8 @@
     <EmbeddedResource Include="HomRemedy.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Content Include="PathologyLocalisation.hbm.xml" />
+    <EmbeddedResource Include="RemedyGenericInfo.hbm.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

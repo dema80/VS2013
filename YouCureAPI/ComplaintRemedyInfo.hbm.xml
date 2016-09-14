@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping assembly="YouCureAPI" namespace="YouCureAPI.Models" xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ComplaintRemedyInfo" table="&quot;Therapeutic&quot;.complaint_remedy_info" lazy="false" >
+    <id name="CrId" column="cr_id" />
+    <property name="RAbbrev">
+      <column name="r_abbrev" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="PIcd10Code">
+      <column name="p_icd10_code" sql-type="character varying" not-null="false" />
+    </property>
+    <property name="TextInfo">
+      <column name="text_info" sql-type="character varying" not-null="false" />
+    </property>
+  </class>
+</hibernate-mapping>
